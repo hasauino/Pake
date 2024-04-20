@@ -55,37 +55,16 @@ const downloadIcon = async iconFile => {
   try {
     const response = await axios.get(process.env.ICON, { responseType: 'arraybuffer' });
     fs.writeFileSync(iconFile, response.data);
-    return `${params} --icon ${iconFile}`;
+    return `${params} --icon ${process.env.ICON}`;
   } catch (error) {
     console.error('Error occurred during icon download: ', error);
   }
 };
 
 const main = async () => {
-  if (process.env.ICON && process.env.ICON !== '') {
-    let iconFile;
-    switch (process.platform) {
-      case 'linux':
-        iconFile = 'icon.png';
-        break;
-      case 'darwin':
-        iconFile = 'icon.icns';
-        break;
-      case 'win32':
-        iconFile = 'icon.ico';
-        break;
-      default:
-        console.log("Unable to detect your OS system, won't download the icon!");
-        process.exit(1);
-    }
-
-    params = await downloadIcon(iconFile);
-  } else {
-    console.log("Won't download the icon as ICON environment variable is not defined!");
-  }
-
   console.log('Pake parameters is: ', params);
   console.log('Compile....');
+  params = `${params} --icon ${process.env.ICON}`
   exec(params);
 
   if (!fs.existsSync('output')) {
