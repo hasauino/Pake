@@ -19,6 +19,8 @@ console.log('is multi arch? only for Mac: ', process.env.MULTI_ARCH);
 console.log('targets type? only for Linux: ', process.env.TARGETS);
 console.log('===========================\n');
 
+console.log('Current directory: ' + process.cwd());
+
 cd('node_modules/pake-cli');
 let params = `node cli.js ${process.env.URL} --name ${process.env.NAME} --height ${process.env.HEIGHT} --width ${process.env.WIDTH}`;
 
