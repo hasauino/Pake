@@ -1,8 +1,9 @@
 import shelljs from 'shelljs';
-import axios from 'axios';
 import fs from 'fs';
+import path from 'path';
 
 const { exec, cd, mv } = shelljs;
+const icon_path = path.resolve(path.join(process.cwd(), process.env.ICON));
 
 console.log('Welcome to use pake-cli to build app');
 console.log('Node.js info in your localhost ', process.version);
@@ -10,7 +11,7 @@ console.log('\n=======================\n');
 console.log('Pake parameters is: ');
 console.log('url: ', process.env.URL);
 console.log('name: ', process.env.NAME);
-console.log('icon: ', process.env.ICON);
+console.log('icon: ', icon_path);
 console.log('height: ', process.env.HEIGHT);
 console.log('width: ', process.env.WIDTH);
 console.log('transparent: ', process.env.TRANSPARENT);
@@ -18,8 +19,6 @@ console.log('resize: ', process.env.RESIZE);
 console.log('is multi arch? only for Mac: ', process.env.MULTI_ARCH);
 console.log('targets type? only for Linux: ', process.env.TARGETS);
 console.log('===========================\n');
-
-console.log('Current directory: ' + process.cwd());
 
 cd('node_modules/pake-cli');
 let params = `node cli.js ${process.env.URL} --name ${process.env.NAME} --height ${process.env.HEIGHT} --width ${process.env.WIDTH}`;
@@ -53,20 +52,10 @@ if (process.platform === 'darwin') {
   params = `${params} --show-menu`;
 }
 
-const downloadIcon = async iconFile => {
-  try {
-    const response = await axios.get(process.env.ICON, { responseType: 'arraybuffer' });
-    fs.writeFileSync(iconFile, response.data);
-    return `${params} --icon ${process.env.ICON}`;
-  } catch (error) {
-    console.error('Error occurred during icon download: ', error);
-  }
-};
-
 const main = async () => {
   console.log('Pake parameters is: ', params);
   console.log('Compile....');
-  params = `${params} --icon ${process.env.ICON}`
+  params = `${params} --icon ${icon_path}`
   exec(params);
 
   if (!fs.existsSync('output')) {
